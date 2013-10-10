@@ -24,6 +24,10 @@ public class Vector {
   public double dot(Vector other) {
     return this.x * other.x + this.y * other.y;
   }
+  
+  public Vector scale(double scalar) {
+    return new Vector(x * scalar, y * scalar);
+  }
 
   public Vector divide(double scalar) {
     return new Vector(this.x / scalar, this.y / scalar);
