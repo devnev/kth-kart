@@ -26,7 +26,6 @@ public class Util {
     runBot(url, new MyBot(), "testkey" + "2", "TestBot2");
     runBot(url, new MyBot(), "testkey" + "3", "TestBot3");
     runBot(url, new MyBot(), "testkey" + "4", "TestBot4");
-    runBot(url, new MyBot(), "testkey" + "5", "TestBot5");
   }
 
   public static void runBot(final String url, final Bot bot, final String accessKey,
