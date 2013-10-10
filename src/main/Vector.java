@@ -18,7 +18,7 @@ public class Vector {
   }
 
   public double getLength() {
-    return Math.sqrt(x*x + y*y);
+    return Math.sqrt(x * x + y * y);
   }
 
   public double dot(Vector other) {
@@ -31,5 +31,9 @@ public class Vector {
 
   public Vector negate() {
     return new Vector(-x, -y);
+  }
+
+  public Vector turn(double radians) {
+    return new Vector(x*Math.cos(radians) - y*Math.sin(radians), x*Math.sin(radians) + y*Math.cos(radians));
   }
 }
