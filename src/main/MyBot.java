@@ -9,7 +9,9 @@ import se.openmind.kart.GameState.Kart;
 import se.openmind.kart.OrderUpdate.Order;
 import se.openmind.kart.Util;
 
-public class MyBot implements Bot {
+import com.google.common.collect.ImmutableList;
+
+public class MyBot extends MooBot {
   /*
    * The first thing you should do is enter your access key and team name
    * Note: Team name cannot be changed once set (without magic from contest administrators)
@@ -29,8 +31,15 @@ public class MyBot implements Bot {
     }
 
     Util.runBot(url, new MyBot(), "testkey" + "1", "Moo");
-    for (int i = 2; i < 5; ++i) {
-      Util.runBot(url, new MyBot(), "testkey" + i, "TestBot" + i);
+
+    ImmutableList<Bot> opponents = ImmutableList.<Bot>of(
+      new MyBot(),
+      new MyBot(),
+      new MyBot());
+    int i = 2;
+    for (Bot opponent : opponents) {
+      Util.runBot(url, opponent, "testkey" + i, "Opponent" + i);
+      ++i;
     }
   }
 
