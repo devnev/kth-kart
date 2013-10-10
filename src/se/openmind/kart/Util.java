@@ -1,5 +1,6 @@
 package se.openmind.kart;
 
+import main.FetchAndFireBot;
 import main.MyBot;
 
 public class Util {
@@ -21,7 +22,7 @@ public class Util {
       return;
     }
 
-    runBot(url, new MyBot(), "testkey" + "1", "Moo");
+    runBot(url, new FetchAndFireBot(), "testkey" + "1", "Moo");
     runBot(url, new MyBot(), "testkey" + "2", "TestBot2");
     runBot(url, new MyBot(), "testkey" + "3", "TestBot3");
     runBot(url, new MyBot(), "testkey" + "4", "TestBot4");
