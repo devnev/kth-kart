@@ -100,7 +100,7 @@ public class ConstructionBot extends MooBot {
       if (enemy.getInvulnerableTimeLeft() > 0 || enemy.getStunnedTimeLeft() > 0) {
         continue;
       }
-      Vector nextPosition = getInPositionToShootEnemeny(me, enemy);
+      Vector nextPosition = getInPositionToShootEnemeny(me, enemy).truncateToValid();
       return Order.MoveOrder(nextPosition.x, nextPosition.y);
     }
     return null;

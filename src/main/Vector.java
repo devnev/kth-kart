@@ -19,6 +19,20 @@ public class Vector {
     return new Vector(entity.getXPos(), entity.getYPos());
   }
 
+  private double toValid(double value) {
+    if (value < 0) {
+      return 0;
+    }
+    if (value > 100) {
+      return 100;
+    }
+    return value;
+  }
+
+  public Vector truncateToValid() {
+    return new Vector(toValid(x), toValid(y));
+  }
+
   public Vector(double x, double y) {
     this.x = x;
     this.y = y;

@@ -157,7 +157,9 @@ public abstract class MooBot implements Bot {
 
     double distanceLeft = Vector.between(myPosition, safeLeft).getLength();
     double distanceRight = Vector.between(myPosition, safeRight).getLength();
-    return distanceLeft < distanceRight ? safeLeft : safeRight;
+
+    Vector returnValue = distanceLeft < distanceRight ? safeLeft : safeRight;
+    return returnValue.truncateToValid();
   }
 
   protected static class DistanceToEntityComparator implements Comparator<Entity> {
