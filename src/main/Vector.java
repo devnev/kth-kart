@@ -21,10 +21,14 @@ public class Vector {
     return Math.sqrt(x * x + y * y);
   }
 
+  public Vector add(Vector other) {
+    return new Vector(this.x + other.x, this.y + other.y);
+  }
+
   public double dot(Vector other) {
     return this.x * other.x + this.y * other.y;
   }
-  
+
   public Vector scale(double scalar) {
     return new Vector(x * scalar, y * scalar);
   }
@@ -38,6 +42,7 @@ public class Vector {
   }
 
   public Vector turn(double radians) {
-    return new Vector(x*Math.cos(radians) - y*Math.sin(radians), x*Math.sin(radians) + y*Math.cos(radians));
+    return new Vector(x * Math.cos(radians) - y * Math.sin(radians), x * Math.sin(radians) + y
+        * Math.cos(radians));
   }
 }
