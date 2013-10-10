@@ -3,7 +3,6 @@ package main;
 import se.openmind.kart.ApiClient;
 import se.openmind.kart.Bot;
 import se.openmind.kart.GameState;
-import se.openmind.kart.GameState.Entity;
 import se.openmind.kart.GameState.ItemBox;
 import se.openmind.kart.GameState.Kart;
 import se.openmind.kart.OrderUpdate.Order;
@@ -65,11 +64,5 @@ public class MyBot extends MooBot {
 
     // Returning null is ok, your bot will continue doing what it is doing
     return null;
-  }
-
-  private double distance(Entity a, Entity b) {
-    double xDist = a.getXPos() - b.getXPos();
-    double yDist = a.getYPos() - b.getYPos();
-    return Math.sqrt(xDist*xDist + yDist*yDist);
   }
 }

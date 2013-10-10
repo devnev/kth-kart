@@ -1,0 +1,35 @@
+package main;
+
+public class Vector {
+  public final double x;
+  public final double y;
+
+  public static Vector between(Vector source, Vector target) {
+    return new Vector(target.x - source.x, target.y - source.y);
+  }
+
+  public Vector(double x, double y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  public Vector getUnitVector() {
+    return divide(getLength());
+  }
+
+  public double getLength() {
+    return Math.sqrt(x*x + y*y);
+  }
+
+  public double dot(Vector other) {
+    return this.x * other.x + this.y * other.y;
+  }
+
+  public Vector divide(double scalar) {
+    return new Vector(this.x / scalar, this.y / scalar);
+  }
+
+  public Vector negate() {
+    return new Vector(-x, -y);
+  }
+}
