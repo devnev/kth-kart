@@ -10,7 +10,7 @@ import se.openmind.kart.OrderUpdate.Order;
 
 import com.google.common.base.Optional;
 
-public class FetchAndFireBot extends MooBot {
+public class ConstructionBot extends MooBot {
   @Override
   public Order playGame(GameState state) {
     Kart me = state.getYourKart();
