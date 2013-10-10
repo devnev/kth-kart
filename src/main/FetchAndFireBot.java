@@ -1,19 +1,16 @@
 package main;
 
-import se.openmind.kart.Bot;
 import se.openmind.kart.GameState;
-import se.openmind.kart.GameState.Entity;
 import se.openmind.kart.GameState.ItemBox;
 import se.openmind.kart.GameState.Kart;
 import se.openmind.kart.OrderUpdate.Order;
 
-public class FetchAndFireBot implements Bot {
-
+public class FetchAndFireBot extends MooBot {
   @Override
   public Order playGame(GameState state) {
     Kart me = state.getYourKart();
 
-    if (me.getShells() == 0) {
+    if (me.getShells() < 2) {
       // This default implementation will move towards the closest item
       // box
       ItemBox closestItemBox = null;
@@ -33,7 +30,7 @@ public class FetchAndFireBot implements Bot {
         }
       }
       if (closestKart != null) {
-        if (distance(me, closestKart) < 30) {
+        if (isGuaranteedHit(me, closestKart)) {
           return Order.FireOrder(closestKart.getId());
         } else {
           return Order.MoveOrder(closestKart.getXPos(), closestKart.getYPos());
@@ -42,11 +39,5 @@ public class FetchAndFireBot implements Bot {
     }
 
     return null;
-  }
-
-  private double distance(Entity a, Entity b) {
-    double xDist = a.getXPos() - b.getXPos();
-    double yDist = a.getYPos() - b.getYPos();
-    return Math.sqrt(xDist * xDist + yDist * yDist);
   }
 }

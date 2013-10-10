@@ -29,7 +29,7 @@ public class MyBot extends MooBot {
       return;
     }
 
-    Util.runBot(url, new MyBot(), "testkey" + "1", "Moo");
+    Util.runBot(url, new FetchAndFireBot(), "testkey" + "1", "Moo");
 
     ImmutableList<Bot> opponents = ImmutableList.<Bot>of(
       new MyBot(),
