@@ -96,6 +96,13 @@ public abstract class MooBot implements Bot {
     Collections.sort(itemBoxes, new DistanceToEntityComparator(state.getYourKart()));
     for (ItemBox box : itemBoxes) {
       double distance = distance(me, box);
+      for (Kart enemy : state.getEnemyKarts()) {
+        if (distance(enemy, box) < distance) {
+          // Ignore boxes with enemies close by.
+          continue;
+        }
+      }
+
       if (distance < BOX_DISTANCE_THRESHOLD.get(me.getShells())) {
         return Optional.of(box);
       }

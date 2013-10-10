@@ -33,7 +33,7 @@ public class ConstructionBot extends MooBot {
     }
 
     Optional<Shell> shell = getShellForDefense(state);
-    if (shell.isPresent()) {
+    if (shell.isPresent() && me.getShells() >= 2) {
       return Order.FireOrder(shell.get().getId());
     }
 
