@@ -7,6 +7,7 @@ import se.openmind.kart.GameState.Entity;
 import se.openmind.kart.GameState.ItemBox;
 import se.openmind.kart.GameState.Kart;
 import se.openmind.kart.OrderUpdate.Order;
+import se.openmind.kart.Util;
 
 public class MyBot implements Bot {
   /*
@@ -23,13 +24,14 @@ public class MyBot implements Bot {
       // Config for official submission.
       url = "http://kart.openmind.se/api/GameState";
       accessKey = "e3e1e3c3";
-    } else if(args.length > 1) {
-      // Configure the access key for local battles
-      accessKey = args[0];
+      new ApiClient(url, accessKey, teamName).Run(new MyBot());
+      return;
     }
 
-    ApiClient client = new ApiClient(url, accessKey, teamName);
-    client.Run(new MyBot());
+    Util.runBot(url, new MyBot(), "testkey" + "1", "Moo");
+    for (int i = 2; i < 5; ++i) {
+      Util.runBot(url, new MyBot(), "testkey" + i, "TestBot" + i);
+    }
   }
 
   Integer targetEnemy;
