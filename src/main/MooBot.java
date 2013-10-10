@@ -1,16 +1,34 @@
 package main;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import se.openmind.kart.Bot;
+import se.openmind.kart.GameState;
 import se.openmind.kart.GameState.Entity;
 import se.openmind.kart.GameState.ItemBox;
 import se.openmind.kart.GameState.Kart;
 import se.openmind.kart.GameState.MovingEntity;
+import se.openmind.kart.OrderUpdate.Order;
+
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableMap;
 
 /**
  * Base class for bots providing utility methods.
  */
 public abstract class MooBot implements Bot {
   private double BULLET_LIFETIME_S = 1.0;
+
+  private ImmutableMap<Integer, Integer> BOX_DISTANCE_THRESHOLD = ImmutableMap.<Integer, Integer>builder()
+      .put(0, 100)
+      .put(1, 40)
+      .put(2, 30)
+      .put(3, 10)
+      .put(4, 5)
+      .put(5, 0)
+      .build();
 
   protected double distance(Entity a, Entity b) {
     double xDist = a.getXPos() - b.getXPos();
@@ -35,7 +53,7 @@ public abstract class MooBot implements Bot {
 
     Vector sourceToExpectedTarget = Vector.between(
         sourcePosition, expectedPosition(target, BULLET_LIFETIME_S));
-    if (sourceToExpectedTarget.getLength() > 30) {
+    if (sourceToExpectedTarget.getLength() > 28) {
       return false;
     }
 
@@ -57,6 +75,27 @@ public abstract class MooBot implements Bot {
     double min = 0.7;
     double max = 0.95;
     return max - normalizedDistance * (max - min);
+  }
+
+  protected Optional<Vector> getShellEvasionDirection() {
+    throw new UnsupportedOperationException();
+  }
+
+  protected Optional<ItemBox> selectItemBox(GameState state) {
+    final Kart me = state.getYourKart();
+    List<ItemBox> itemBoxes = state.getItemBoxes();
+    Collections.sort(itemBoxes, new DistanceToEntityComparator(state.getYourKart()));
+    for (ItemBox box : itemBoxes) {
+      double distance = distance(me, box);
+      if (distance < BOX_DISTANCE_THRESHOLD.get(me.getShells())) {
+        return Optional.of(box);
+      }
+    }
+    return Optional.absent();
+  }
+
+  protected Order moveTo(Entity entity) {
+    return Order.MoveOrder(entity.getXPos(), entity.getYPos());
   }
 
   double turnMoveDistance(Entity target, MovingEntity source, double turnRadius) {
@@ -90,6 +129,21 @@ public abstract class MooBot implements Bot {
       Vector tangentStartDelta = Vector.between(sourcePos, new Vector(tangents[0][0], tangents[0][1]));
       double turnRadians = Math.asin(tangentStartDelta.divide(2).getLength()/turnRadius) * 2;
       return straightDistance + turnRadians;
+    }
+  }
+
+  protected static class DistanceToEntityComparator implements Comparator<Entity> {
+    private Entity entity;
+
+    public DistanceToEntityComparator(Entity entity) {
+      this.entity = entity;
+    }
+
+    @Override
+    public int compare(Entity first, Entity second) {
+      Vector meToFirst = Vector.between(Vector.positionOf(entity), Vector.positionOf(first));
+      Vector meToSecond = Vector.between(Vector.positionOf(entity), Vector.positionOf(second));
+      return Double.compare(meToFirst.getLength(), meToSecond.getLength());
     }
   }
 }

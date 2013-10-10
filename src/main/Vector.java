@@ -1,11 +1,17 @@
 package main;
 
+import se.openmind.kart.GameState.Entity;
+
 public class Vector {
   public final double x;
   public final double y;
 
   public static Vector between(Vector source, Vector target) {
     return new Vector(target.x - source.x, target.y - source.y);
+  }
+
+  public static Vector positionOf(Entity entity) {
+    return new Vector(entity.getXPos(), entity.getYPos());
   }
 
   public Vector(double x, double y) {

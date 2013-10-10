@@ -1,12 +1,13 @@
 package se.openmind.kart;
 
+import main.ConstructionBot;
 import main.FetchAndFireBot;
 import main.MyBot;
 
 public class Util {
   /**
    * Utility for running multiple bots in the same process
-   * 
+   *
    * @param args
    */
   public static void main(String[] args) {
@@ -22,15 +23,16 @@ public class Util {
       return;
     }
 
-    runBot(url, new FetchAndFireBot(), "testkey" + "1", "Moo");
-    runBot(url, new MyBot(), "testkey" + "2", "TestBot2");
-    runBot(url, new MyBot(), "testkey" + "3", "TestBot3");
-    runBot(url, new MyBot(), "testkey" + "4", "TestBot4");
+    Util.runBot(url, new ConstructionBot(), "testkey1", "Construction");
+    Util.runBot(url, new FetchAndFireBot(), "testkey2", "FetchAndFire");
+    Util.runBot(url, new MyBot(), "testkey3", "MyBot");
+    Util.runBot(url, new MyBot(), "testkey4", "MyBot");
   }
 
   public static void runBot(final String url, final Bot bot, final String accessKey,
       final String teamName) {
     Runnable r = new Runnable() {
+      @Override
       public void run() {
         ApiClient client = new ApiClient(url, accessKey, teamName);
         client.Run(bot);
