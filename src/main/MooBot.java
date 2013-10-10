@@ -127,7 +127,7 @@ public abstract class MooBot implements Bot {
           Vector.between(new Vector(tangents[0][0], tangents[0][1]),
               new Vector(tangents[0][2], tangents[0][3])).getLength();
       Vector tangentStartDelta = Vector.between(sourcePos, new Vector(tangents[0][0], tangents[0][1]));
-      double turnRadians = Math.asin(tangentStartDelta.divide(2).getLength()/turnRadius) * 2;
+      double turnRadians = Math.asin(tangentStartDelta.divide(2).getLength()/turnRadius) * 2 * turnRadius;
       return straightDistance + turnRadians;
     }
   }
