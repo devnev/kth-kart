@@ -77,7 +77,6 @@ public abstract class MooBot implements Bot {
     return max - normalizedDistance * (max - min);
   }
 
-<<<<<<< HEAD
   protected Optional<Vector> getShellEvasionDirection() {
     throw new UnsupportedOperationException();
   }

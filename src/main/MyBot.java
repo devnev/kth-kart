@@ -1,14 +1,10 @@
 package main;
 
 import se.openmind.kart.ApiClient;
-import se.openmind.kart.Bot;
 import se.openmind.kart.GameState;
 import se.openmind.kart.GameState.ItemBox;
 import se.openmind.kart.GameState.Kart;
 import se.openmind.kart.OrderUpdate.Order;
-import se.openmind.kart.Util;
-
-import com.google.common.collect.ImmutableList;
 
 public class MyBot extends MooBot {
   /*
@@ -18,28 +14,9 @@ public class MyBot extends MooBot {
   private static String teamName =  "Moo";
 
   public static void main(String[] args) {
-    String url = "http://localhost:8080/api/GameState";
-    String accessKey = "testkey1";
-
-    if (args.length == 2 && args[0].equals("official")) {
-      // Config for official submission.
-      url = "http://kart.openmind.se/api/GameState";
-      accessKey = "e3e1e3c3";
-      new ApiClient(url, accessKey, teamName).Run(new MyBot());
-      return;
-    }
-
-    Util.runBot(url, new FetchAndFireBot(), "testkey" + "1", "Moo");
-
-    ImmutableList<Bot> opponents = ImmutableList.<Bot>of(
-      new MyBot(),
-      new MyBot(),
-      new MyBot());
-    int i = 2;
-    for (Bot opponent : opponents) {
-      Util.runBot(url, opponent, "testkey" + i, "Opponent" + i);
-      ++i;
-    }
+    String url = "http://kart.openmind.se/api/GameState";
+    String accessKey = "e3e1e3c3";
+    new ApiClient(url, accessKey, teamName).Run(new MyBot());
   }
 
   Integer targetEnemy;
