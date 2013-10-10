@@ -107,22 +107,23 @@ public abstract class MooBot implements Bot {
     return Order.MoveOrder(entity.getXPos(), entity.getYPos());
   }
 
-  double turnMoveDistance(Entity target, Kart me, double turnRadius) {
+  double turnMoveDistance(Entity target, MovingEntity source, double turnRadius) {
     Vector targetPos = new Vector(target.getXPos(), target.getYPos());
-    Vector mePos = new Vector(me.getXPos(), me.getYPos());
-    Vector targetDelta = Vector.between(mePos, targetPos);
-    Vector meDirection = new Vector(Math.sin(me.getDirection()), Math.cos(me.getDirection()));
-    double dotted = targetDelta.getUnitVector().dot(meDirection);
+    Vector sourcePos = new Vector(source.getXPos(), source.getYPos());
+    Vector targetDelta = Vector.between(sourcePos, targetPos);
+    Vector sourceDirection = new Vector(Math.cos(source.getDirection()), Math.sin(source.getDirection()));
+    double cross = targetDelta.getUnitVector().cross(sourceDirection);
+    double dotted = targetDelta.getUnitVector().dot(sourceDirection);
 
-    if (dotted < 0.000001 && dotted > -0.000001) {
+    if (dotted < 1+0.000001 && dotted > 1-0.000001) {
       return targetDelta.getLength();
     }
 
     Vector turnCenter;
-    if (dotted < 0) {
-      turnCenter = mePos.add(meDirection.turn(-Math.PI / 2).scale(turnRadius));
+    if (cross < 0) {
+      turnCenter = sourcePos.add(sourceDirection.turn(-Math.PI / 2).scale(turnRadius));
     } else {
-      turnCenter = mePos.add(meDirection.turn(Math.PI / 2).scale(turnRadius));
+      turnCenter = sourcePos.add(sourceDirection.turn(Math.PI / 2).scale(turnRadius));
     }
 
     double[][] tangents =
@@ -134,8 +135,8 @@ public abstract class MooBot implements Bot {
       double straightDistance =
           Vector.between(new Vector(tangents[0][0], tangents[0][1]),
               new Vector(tangents[0][2], tangents[0][3])).getLength();
-      Vector tangentStartDelta = Vector.between(mePos, new Vector(tangents[0][0], tangents[0][1]));
-      double turnRadians = Math.asin(tangentStartDelta.divide(2).getLength()/turnRadius) * 2;
+      Vector tangentStartDelta = Vector.between(sourcePos, new Vector(tangents[0][0], tangents[0][1]));
+      double turnRadians = Math.asin(tangentStartDelta.divide(2).getLength()/turnRadius) * 2 * turnRadius;
       return straightDistance + turnRadians;
     }
   }

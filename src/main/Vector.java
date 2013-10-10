@@ -61,4 +61,8 @@ public class Vector {
         x * Math.cos(radians) - y * Math.sin(radians),
         x * Math.sin(radians) + y * Math.cos(radians));
   }
+
+  public double cross(Vector other) {
+    return Math.abs(x * other.y - y * other.x);
+  }
 }
