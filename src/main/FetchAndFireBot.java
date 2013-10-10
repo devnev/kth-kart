@@ -10,7 +10,7 @@ public class FetchAndFireBot extends MooBot {
   public Order playGame(GameState state) {
     Kart me = state.getYourKart();
 
-    if (me.getShells() < 2) {
+    if (me.getShells() < 1) {
       // This default implementation will move towards the closest item
       // box
       ItemBox closestItemBox = null;
@@ -23,6 +23,12 @@ public class FetchAndFireBot extends MooBot {
         return Order.MoveOrder(closestItemBox.getXPos(), closestItemBox.getYPos());
       }
     } else {
+      for (Kart k : state.getEnemyKarts()) {
+        if (isGuaranteedHit(me, k)) {
+          return Order.FireOrder(k.getId());
+        }
+      }
+      
       Kart closestKart = null;
       for (Kart k : state.getEnemyKarts()) {
         if (closestKart == null || distance(me, k) < distance(me, closestKart)) {
@@ -30,11 +36,7 @@ public class FetchAndFireBot extends MooBot {
         }
       }
       if (closestKart != null) {
-        if (isGuaranteedHit(me, closestKart)) {
-          return Order.FireOrder(closestKart.getId());
-        } else {
-          return Order.MoveOrder(closestKart.getXPos(), closestKart.getYPos());
-        }
+        return Order.MoveOrder(closestKart.getXPos(), closestKart.getYPos());
       }
     }
 
