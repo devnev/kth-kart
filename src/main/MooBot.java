@@ -23,9 +23,9 @@ public abstract class MooBot implements Bot {
 
   private ImmutableMap<Integer, Integer> BOX_DISTANCE_THRESHOLD = ImmutableMap.<Integer, Integer>builder()
       .put(0, 100)
-      .put(1, 10)
-      .put(2, 10)
-      .put(3, 5)
+      .put(1, 40)
+      .put(2, 30)
+      .put(3, 10)
       .put(4, 5)
       .put(5, 0)
       .build();

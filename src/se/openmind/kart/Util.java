@@ -1,7 +1,5 @@
 package se.openmind.kart;
 
-import com.google.common.collect.ImmutableList;
-
 import main.ConstructionBot;
 import main.FetchAndFireBot;
 import main.MyBot;
@@ -25,17 +23,10 @@ public class Util {
       return;
     }
 
-    Util.runBot(url, new ConstructionBot(), "testkey" + "1", "Moo");
-
-    ImmutableList<Bot> opponents = ImmutableList.<Bot>of(
-      new FetchAndFireBot(),
-      new MyBot(),
-      new MyBot());
-    int i = 2;
-    for (Bot opponent : opponents) {
-      runBot(url, opponent, "testkey" + i, "Opponent" + i);
-      ++i;
-    }
+    Util.runBot(url, new ConstructionBot(), "testkey1", "Construction");
+    Util.runBot(url, new FetchAndFireBot(), "testkey2", "FetchAndFire");
+    Util.runBot(url, new MyBot(), "testkey3", "MyBot");
+    Util.runBot(url, new MyBot(), "testkey4", "MyBot");
   }
 
   public static void runBot(final String url, final Bot bot, final String accessKey,
