@@ -3,6 +3,7 @@ package se.openmind.kart;
 import main.ConstructionBot;
 import main.FetchAndFireBot;
 import main.MyBot;
+import main.Peaceful;
 
 public class Util {
   /**
@@ -25,8 +26,8 @@ public class Util {
 
     Util.runBot(url, new ConstructionBot(), "testkey1", "Construction");
     Util.runBot(url, new FetchAndFireBot(), "testkey2", "FetchAndFire");
-    Util.runBot(url, new MyBot(), "testkey3", "MyBot");
-    Util.runBot(url, new MyBot(), "testkey4", "MyBot");
+    Util.runBot(url, new Peaceful(), "testkey3", "Peaceful");
+    Util.runBot(url, new ConstructionBot(), "testkey4", "Construction2");
   }
 
   public static void runBot(final String url, final Bot bot, final String accessKey,

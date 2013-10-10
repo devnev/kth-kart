@@ -4,6 +4,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import se.openmind.kart.Bot;
 import se.openmind.kart.GameState;
 import se.openmind.kart.GameState.Entity;
@@ -19,13 +22,15 @@ import com.google.common.collect.ImmutableMap;
  * Base class for bots providing utility methods.
  */
 public abstract class MooBot implements Bot {
+  private static final Log log = LogFactory.getLog(MooBot.class);
+
   private double BULLET_LIFETIME_S = 1.0;
 
   private ImmutableMap<Integer, Integer> BOX_DISTANCE_THRESHOLD = ImmutableMap.<Integer, Integer>builder()
       .put(0, 100)
-      .put(1, 40)
-      .put(2, 30)
-      .put(3, 10)
+      .put(1, 25)
+      .put(2, 10)
+      .put(3, 5)
       .put(4, 5)
       .put(5, 0)
       .build();
@@ -36,11 +41,15 @@ public abstract class MooBot implements Bot {
     return Math.sqrt(xDist*xDist + yDist*yDist);
   }
 
+  protected boolean isValid(Vector position) {
+    return position.x >= 0 && position.x <= 100 && position.y >= 0 && position.y <= 100;
+  }
+
   /**
    * Returns true if we think that source will actually hit target if it fires now.
    */
   protected boolean isGuaranteedHit(Kart source, Kart target) {
-    if (target.getInvulnerableTimeLeft() > 0) {
+    if (target.getInvulnerableTimeLeft() > 0 || target.getStunnedTimeLeft() > 0) {
       return false;
     }
 
@@ -129,6 +138,25 @@ public abstract class MooBot implements Bot {
       double turnRadians = Math.asin(tangentStartDelta.divide(2).getLength()/turnRadius) * 2;
       return straightDistance + turnRadians;
     }
+  }
+
+  protected Vector getSafePointNearEnemy(Kart me, Kart enemy) {
+    Vector myPosition = Vector.positionOf(me);
+    Vector enemyPosition = Vector.positionOf(enemy);
+    Vector enemyDirection = new Vector(enemy.getxSpeed(), enemy.getySpeed()).getUnitVector();
+    Vector safeDirection = enemyDirection.turn(Math.PI / 2.0);
+
+    if (Double.isNaN(safeDirection.x) || Double.isNaN(safeDirection.y)) {
+      log.info("Enemy position: " + enemyPosition + ", enemy direction: " + enemyDirection);
+      return enemyPosition;
+    }
+
+    Vector safeLeft = enemyPosition.add(safeDirection);
+    Vector safeRight = enemyPosition.subtract(safeDirection);
+
+    double distanceLeft = Vector.between(myPosition, safeLeft).getLength();
+    double distanceRight = Vector.between(myPosition, safeRight).getLength();
+    return distanceLeft < distanceRight ? safeLeft : safeRight;
   }
 
   protected static class DistanceToEntityComparator implements Comparator<Entity> {

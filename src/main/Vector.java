@@ -3,6 +3,11 @@ package main;
 import se.openmind.kart.GameState.Entity;
 
 public class Vector {
+  @Override
+  public String toString() {
+    return "Vector [x=" + x + ", y=" + y + "]";
+  }
+
   public final double x;
   public final double y;
 
@@ -29,6 +34,10 @@ public class Vector {
 
   public Vector add(Vector other) {
     return new Vector(this.x + other.x, this.y + other.y);
+  }
+
+  public Vector subtract(Vector other) {
+    return new Vector(this.x - other.x, this.y - other.y);
   }
 
   public double dot(Vector other) {
