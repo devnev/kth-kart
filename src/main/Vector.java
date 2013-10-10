@@ -42,7 +42,8 @@ public class Vector {
   }
 
   public Vector turn(double radians) {
-    return new Vector(x * Math.cos(radians) - y * Math.sin(radians), x * Math.sin(radians) + y
-        * Math.cos(radians));
+    return new Vector(
+        x * Math.cos(radians) - y * Math.sin(radians),
+        x * Math.sin(radians) + y * Math.cos(radians));
   }
 }
