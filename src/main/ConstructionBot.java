@@ -3,6 +3,9 @@ package main;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import se.openmind.kart.ApiClient;
 import se.openmind.kart.GameState;
 import se.openmind.kart.GameState.ItemBox;
@@ -13,6 +16,8 @@ import se.openmind.kart.OrderUpdate.Order;
 import com.google.common.base.Optional;
 
 public class ConstructionBot extends MooBot {
+  private static final Log log = LogFactory.getLog(ConstructionBot.class);
+
   public static void main(String[] args) {
     String url = "http://kart.openmind.se/api/GameState";
     String accessKey = "e3e1e3c3";
@@ -29,25 +34,41 @@ public class ConstructionBot extends MooBot {
     Collections.sort(sortedBoxes, new DistanceToEntityComparator(state.getYourKart()));
 
     if (!sortedBoxes.isEmpty() && me.getShells() == 0) {
-      return moveTo(sortedBoxes.get(0));
+      ItemBox target = sortedBoxes.get(0);
+      Optional<ItemBox> itemBox = selectItemBox(state, false);
+      if (itemBox.isPresent()) {
+        target = itemBox.get();
+      }
+      return moveTo(target);
     }
 
     Optional<Shell> shell = getShellForDefense(state);
-    if (shell.isPresent() && me.getShells() >= 2) {
+    if (shell.isPresent() && me.getShells() >= 2 && me.getShellCooldownTimeLeft() <= 0) {
       return Order.FireOrder(shell.get().getId());
     }
 
     for (Kart kart : sortedKarts) {
       if (isGuaranteedHit(me, kart)) {
-        return Order.FireOrder(kart.getId());
+        if (me.getShellCooldownTimeLeft() <= 0) {
+          return Order.FireOrder(kart.getId());
+        } else {
+          return moveTo(getInPositionToShootEnemeny(me, kart));
+        }
       }
     }
 
-    Optional<ItemBox> itemBox = selectItemBox(state);
+    Optional<ItemBox> itemBox = selectItemBox(state, true);
     if (itemBox.isPresent()) {
-      return Order.MoveOrder(itemBox.get().getXPos(), itemBox.get().getYPos());
+      return moveTo(itemBox.get());
     }
-    return nothingUrgentOrder(state);
+
+    for (Kart enemy : sortedKarts) {
+      if (enemy.getInvulnerableTimeLeft() > 0 || enemy.getStunnedTimeLeft() > 0) {
+        continue;
+      }
+      return moveTo(getInPositionToShootEnemeny(me, enemy));
+    }
+    return null;
   }
 
   protected Vector getInPositionToShootEnemeny(Kart me, Kart enemy) {
@@ -89,20 +110,6 @@ public class ConstructionBot extends MooBot {
   }
 
   protected Order nothingUrgentOrder(GameState state) {
-    Kart me = state.getYourKart();
-    List<Kart> sortedKarts = state.getEnemyKarts();
-    Collections.sort(sortedKarts, new DistanceToEntityComparator(state.getYourKart()));
-    if (sortedKarts.isEmpty()) {
-      return null;
-    }
-
-    for (Kart enemy : sortedKarts) {
-      if (enemy.getInvulnerableTimeLeft() > 0 || enemy.getStunnedTimeLeft() > 0) {
-        continue;
-      }
-      Vector nextPosition = getInPositionToShootEnemeny(me, enemy).truncateToValid();
-      return Order.MoveOrder(nextPosition.x, nextPosition.y);
-    }
     return null;
   }
 }
