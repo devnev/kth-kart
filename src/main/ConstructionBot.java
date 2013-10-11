@@ -64,6 +64,12 @@ public class ConstructionBot extends MooBot {
       }
       return Order.MoveOrder(getInPositionToShootEnemeny(me, enemy));
     }
+
+    itemBox = selectItemBox(state, false);
+    if (itemBox.isPresent()) {
+      return Order.MoveOrder(itemBox.get());
+    }
+
     return null;
   }
 

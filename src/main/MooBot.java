@@ -8,6 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import se.openmind.kart.Bot;
+import se.openmind.kart.GameConstants;
 import se.openmind.kart.GameState;
 import se.openmind.kart.GameState.Entity;
 import se.openmind.kart.GameState.ItemBox;
@@ -88,17 +89,24 @@ public abstract class MooBot implements Bot {
   protected Optional<Vector> getShellEvasionDirection() {
     throw new UnsupportedOperationException();
   }
+  
+  protected double moveTime(Kart kart, Entity target) {
+    // TODO: Generalize kart to MovingEntity
+    // TODO: Replace euclidean distance with movement distance that considers orientation and turn speed
+    return distance(kart, target) / GameConstants.KartSpeed + kart.getStunnedTimeLeft();
+  }
 
   protected Optional<ItemBox> selectItemBox(GameState state, boolean threshold) {
     final Kart me = state.getYourKart();
     List<ItemBox> itemBoxes = state.getItemBoxes();
-    Collections.sort(itemBoxes, new DistanceToEntityComparator(state.getYourKart()));
+    Collections.sort(itemBoxes, new DistanceToEntityComparator(me));
 
     for (ItemBox box : itemBoxes) {
       double distance = distance(me, box);
+      double time = distance / GameConstants.KartSpeed;
       boolean cont = false;
       for (Kart enemy : state.getEnemyKarts()) {
-        if (distance(enemy, box) < distance) {
+        if (moveTime(enemy, box) < time) {
           // Ignore boxes with enemies close by.
           cont = true;
         }
