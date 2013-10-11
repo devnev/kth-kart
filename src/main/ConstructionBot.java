@@ -3,9 +3,6 @@ package main;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import se.openmind.kart.ApiClient;
 import se.openmind.kart.GameState;
 import se.openmind.kart.GameState.ItemBox;
@@ -16,7 +13,6 @@ import se.openmind.kart.OrderUpdate.Order;
 import com.google.common.base.Optional;
 
 public class ConstructionBot extends MooBot {
-  private static final Log log = LogFactory.getLog(ConstructionBot.class);
 
   public static void main(String[] args) {
     String url = "http://kart.openmind.se/api/GameState";
@@ -39,7 +35,7 @@ public class ConstructionBot extends MooBot {
       if (itemBox.isPresent()) {
         target = itemBox.get();
       }
-      return moveTo(target);
+      return Order.MoveOrder(target);
     }
 
     Optional<Shell> shell = getShellForDefense(state);
@@ -52,21 +48,21 @@ public class ConstructionBot extends MooBot {
         if (me.getShellCooldownTimeLeft() <= 0) {
           return Order.FireOrder(kart.getId());
         } else {
-          return moveTo(getInPositionToShootEnemeny(me, kart));
+          return Order.MoveOrder(getInPositionToShootEnemeny(me, kart));
         }
       }
     }
 
     Optional<ItemBox> itemBox = selectItemBox(state, true);
     if (itemBox.isPresent()) {
-      return moveTo(itemBox.get());
+      return Order.MoveOrder(itemBox.get());
     }
 
     for (Kart enemy : sortedKarts) {
       if (enemy.getInvulnerableTimeLeft() > 0 || enemy.getStunnedTimeLeft() > 0) {
         continue;
       }
-      return moveTo(getInPositionToShootEnemeny(me, enemy));
+      return Order.MoveOrder(getInPositionToShootEnemeny(me, enemy));
     }
     return null;
   }

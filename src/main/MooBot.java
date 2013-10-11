@@ -13,7 +13,6 @@ import se.openmind.kart.GameState.Entity;
 import se.openmind.kart.GameState.ItemBox;
 import se.openmind.kart.GameState.Kart;
 import se.openmind.kart.GameState.MovingEntity;
-import se.openmind.kart.OrderUpdate.Order;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
@@ -94,17 +93,13 @@ public abstract class MooBot implements Bot {
     final Kart me = state.getYourKart();
     List<ItemBox> itemBoxes = state.getItemBoxes();
     Collections.sort(itemBoxes, new DistanceToEntityComparator(state.getYourKart()));
-    //boolean
-    //for (int i = 0; i < itemBoxes; ++i) {
 
-    //}
     for (ItemBox box : itemBoxes) {
       double distance = distance(me, box);
       boolean cont = false;
       for (Kart enemy : state.getEnemyKarts()) {
         if (distance(enemy, box) < distance) {
           // Ignore boxes with enemies close by.
-          //log.info("Skipping box due to closer enemy");
           cont = true;
         }
       }
@@ -117,15 +112,6 @@ public abstract class MooBot implements Bot {
       }
     }
     return Optional.absent();
-  }
-
-  protected Order moveTo(Vector vector) {
-    Vector valid = vector.truncateToValid();
-    return Order.MoveOrder(valid.x, valid.y);
-  }
-
-  protected Order moveTo(Entity entity) {
-    return moveTo(new Vector(entity.getXPos(), entity.getYPos()));
   }
 
   double turnMoveDistance(Entity target, MovingEntity source, double turnRadius) {
