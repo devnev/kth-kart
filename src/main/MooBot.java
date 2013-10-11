@@ -177,6 +177,15 @@ public abstract class MooBot implements Bot {
     return returnValue.truncateToValid();
   }
 
+  protected Vector getEnemyCentroid(GameState currentState) {
+    Vector enemyCentroid = new Vector(0, 0);
+    for (Kart enemy : currentState.getEnemyKarts()) {
+      enemyCentroid = enemyCentroid.add(Vector.positionOf(enemy));
+    }
+    enemyCentroid = enemyCentroid.divide(currentState.getEnemyKarts().size());
+    return enemyCentroid;
+  }
+
   protected static class DistanceToEntityComparator implements Comparator<Entity> {
     private Entity entity;
 

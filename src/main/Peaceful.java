@@ -29,11 +29,7 @@ public class Peaceful extends ConstructionBot {
       }
     }
 
-    Vector enemyCentroid = new Vector(0, 0);
-    for (Kart enemy : currentState.getEnemyKarts()) {
-      enemyCentroid = enemyCentroid.add(Vector.positionOf(enemy));
-    }
-    enemyCentroid = enemyCentroid.divide(currentState.getEnemyKarts().size());
+    Vector enemyCentroid = getEnemyCentroid(currentState);
 
     if (maxDistance < 30) {
       double maxCentroidDistance = -1;
