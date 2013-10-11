@@ -40,13 +40,13 @@ public class ConstructionBot extends MooBot {
 
     Optional<Shell> shell = getShellForDefense(state);
     if (shell.isPresent() && me.getShells() >= 2 && me.getShellCooldownTimeLeft() <= 0) {
-      return Order.FireOrder(shell.get().getId());
+      return Order.FireOrder(shell.get());
     }
 
     for (Kart kart : sortedKarts) {
       if (isGuaranteedHit(me, kart)) {
         if (me.getShellCooldownTimeLeft() <= 0) {
-          return Order.FireOrder(kart.getId());
+          return Order.FireOrder(kart);
         } else {
           return Order.MoveOrder(getInPositionToShootEnemeny(me, kart));
         }
